@@ -7,6 +7,10 @@ Mahamoti is a logger for life events. It has:
 - a logger that logs to ElasticSearch-ready text files
 - no need for a database
 
+## WARNING
+
+This does not work at all (yet).
+
 ## Installing and running
 
     pip install -e git+https://github.com/regisb/mahamoti.git#egg=mahamoti
