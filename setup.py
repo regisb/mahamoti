@@ -37,7 +37,7 @@ setup(
     author_email="regis@behmo.com",
     url="https://github.com/regisb/mahamoti",
     packages=find_packages(exclude=['contrib', 'docs', 'tests*']),
-    entry_points={'console_scripts': ["mahamoti = mahamoti.views:main"]},
+    entry_points={'console_scripts': ["mahamoti = mahamoti.run:main"]},
     install_requires=install_requires(),
     license="BSD",
     classifiers=classifiers()
