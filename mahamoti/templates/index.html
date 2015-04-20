@@ -1,31 +1,51 @@
 <!DOCTYPE html>
 
 <html>
-  <head>
-    <title>Mahamoti - Your personal life logger</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  </head>
-  <body>
-{% macro render_field(field) %}
-  <dt>{{ field.label }}
-  <dd>{{ field(**kwargs)|safe }}
-  {% if field.errors %}
-    <ul class=errors>
-    {% for error in field.errors %}
-      <li>{{ error }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-  </dd>
-{% endmacro %}
+    <head>
+        <title>Mahamoti - Your personal life logger</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="static/css/foundation.css" />
+        <script src="static/js/vendor/modernizr.js"></script>
+    </head>
+    <body>
 
-      {% for form in forms %}
-          <p>
-          {% for field in form %}
-          {{ render_field(field) }}
-          {% endfor %}
-          </p>
+{% macro render_field(field) %}
+    <div class="row">
+        <div class="large-3 columns">
+            <label class="right inline">{{ field.label }}</label>
+        </div>
+        <div class="large-9 columns">
+            <div {% if field.errors %}class="error"{% endif %}>{{ field(**kwargs)|safe }}
+                {% if field.errors %}
+                {% for error in field.errors %}
+                <small class="error">{{ error }}</small>
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+        {% for form in forms %}
+        <div class="row panel">
+            <div class="large-2 columns">
+                {{ form.name }}
+            </div>
+            {% for field in form %}
+            <div class="large-{{ (9 / form._fields|length)|int }} columns">
+                {{ render_field(field) }}
+            </div>
+            {% endfor %}
+            <div class="large-1 columns">
+                <input class="tiny button" type="submit" value="Log">
+            </div>
+      </div>
       {% endfor %}
-  </body>
+
+      <script src="static/js/vendor/jquery.js"></script>
+      <script src="static/js/foundation.min.js"></script>
+      <script>
+            $(document).foundation();
+      </script>
+      </body>
 </html>
