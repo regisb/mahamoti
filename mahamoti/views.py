@@ -1,12 +1,9 @@
-import logging
-
 from flask import Flask, redirect, render_template, request, flash
 
 from . import config
 from . import forms
 
 app = Flask('mahamoti')
-app.logger.setLevel(logging.DEBUG)
 app.secret_key = config.secret_key()
 
 
@@ -18,8 +15,11 @@ def home():
 def validate():
     form = forms.get_class(request.form["name"])(request.form)
     if form.validate():
-        # TODO we should probably log something here :-)
+        log_event(form.name)
         flash("Activity '{}' logged".format(form.name))
         return redirect("/")
     else:
         return render_template("index.html", forms=forms.instances(form))
+
+def log_event(name):
+    config.Logger.instance(app.debug).info(name)
