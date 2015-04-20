@@ -1,4 +1,7 @@
 from datetime import datetime
+import inspect
+import sys
+
 import wtforms.ext.dateutil.fields
 import wtforms.fields
 import wtforms.form
@@ -7,7 +10,7 @@ import wtforms.validators
 class BaseForm(wtforms.Form):
     name = "Override this in your forms"
 
-class TimestampedForm(wtforms.Form):
+class TimestampedForm(BaseForm):
     time = wtforms.ext.dateutil.fields.DateTimeField(
         "Time",
         default=datetime.now(),
@@ -18,9 +21,13 @@ class RunningForm(TimestampedForm):
     name = "Running"
     distance = wtforms.fields.FloatField("Distance", validators=[wtforms.validators.NumberRange(0)])
 
+class TrumpetPlayingForm(TimestampedForm):
+    name = "Trumpet"
+
 def classes():
     return [
-        RunningForm,
+        obj for _name, obj in inspect.getmembers(sys.modules[__name__], inspect.isclass)
+        if issubclass(obj, BaseForm) and obj.name != BaseForm.name
     ]
 
 def get_class(name):

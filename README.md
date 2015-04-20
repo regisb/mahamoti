@@ -16,6 +16,13 @@ This does not work at all (yet).
     pip install -e git+https://github.com/regisb/mahamoti.git#egg=mahamoti
     mahamoti
 
+## Development
+
+Tests are run with nose:
+
+    pip install nose
+    nosetests
+
 ## F.A.Q
 
 Q: Where does the name come from?
