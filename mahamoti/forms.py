@@ -18,7 +18,18 @@ class RunningForm(TimestampedForm):
     name = "Running"
     distance = wtforms.fields.FloatField("Distance", validators=[wtforms.validators.NumberRange(0)])
 
-def instances():
+def classes():
     return [
-        RunningForm()
+        RunningForm,
+    ]
+
+def get_class(name):
+    for klass in classes():
+        if klass.name == name:
+            return klass
+
+def instances(instance=None):
+    return [
+        klass() if instance is None or klass.name != instance.name else instance
+        for klass in classes()
     ]

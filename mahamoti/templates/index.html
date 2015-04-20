@@ -10,6 +10,12 @@
     </head>
     <body>
 
+    {% for message in get_flashed_messages() %}
+    <div class="row">
+        <div class="large-12 columns alert-box success">{{ message }}</div>
+    </div>
+    {% endfor %}
+
 {% macro render_field(field) %}
     <div class="row">
         <div class="large-3 columns">
@@ -28,17 +34,20 @@
 {% endmacro %}
         {% for form in forms %}
         <div class="row panel">
-            <div class="large-2 columns">
-                {{ form.name }}
-            </div>
-            {% for field in form %}
-            <div class="large-{{ (9 / form._fields|length)|int }} columns">
-                {{ render_field(field) }}
-            </div>
-            {% endfor %}
-            <div class="large-1 columns">
-                <input class="tiny button" type="submit" value="Log">
-            </div>
+            <form method="POST">
+                <div class="large-2 columns">
+                    {{ form.name }}
+                    <input type="hidden" name="name" value="{{ form.name }}">
+                </div>
+                {% for field in form %}
+                <div class="large-{{ (9 / form._fields|length)|int }} columns">
+                    {{ render_field(field) }}
+                </div>
+                {% endfor %}
+                <div class="large-1 columns">
+                    <input class="tiny button" type="submit" value="Log">
+                </div>
+            </form>
       </div>
       {% endfor %}
 
