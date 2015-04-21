@@ -10,6 +10,14 @@ import wtforms.validators
 class BaseForm(wtforms.Form):
     name = "Override this in your forms"
 
+    def to_dict(self):
+        form_dict = {
+            field.name: field.data if not isinstance(field.data, datetime) else str(field.data)
+            for field in self
+        }
+        form_dict["name"] = self.name
+        return form_dict
+
 class TimestampedForm(BaseForm):
     time = wtforms.ext.dateutil.fields.DateTimeField(
         "Time",

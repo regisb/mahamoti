@@ -1,4 +1,5 @@
 from flask import Flask, redirect, render_template, request, flash
+import json
 
 from . import config
 from . import forms
@@ -15,11 +16,12 @@ def home():
 def validate():
     form = forms.get_class(request.form["name"])(request.form)
     if form.validate():
-        log_event(form.name)
+        log_event(form)
         flash("Activity '{}' logged".format(form.name))
         return redirect("/")
     else:
         return render_template("index.html", forms=forms.instances(form))
 
-def log_event(name):
-    config.Logger.instance(app.debug).info(name)
+def log_event(form):
+    event = form.to_dict()
+    config.Logger.instance(app.debug).info(json.dumps(event))
