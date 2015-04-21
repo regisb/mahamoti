@@ -19,26 +19,41 @@ def ensure_is_dir(directory):
 
 
 class Logger(object):
+    LEVEL = logging.INFO
     _instance = None
 
     @classmethod
-    def instance(cls, debug=False):
+    def instance(cls):
         if cls._instance is None:
-            cls._instance = cls.get_logger(debug)
+            cls._instance = cls()
         return cls._instance
 
-    @classmethod
-    def get_logger(cls, debug=False):
-        logger = logging.Logger("mahamoti_events", level=logging.INFO)
+    def __init__(self):
+        self.logger = logging.Logger("mahamoti_events", level=self.LEVEL)
+        self.logger.addHandler(self.get_configured_handler())
+
+    def event(self, *args, **kwargs):
+        return self.logger.info(*args, **kwargs)
+
+    def get_configured_handler(self):
+        handler = self.get_handler()
+        formatter = logging.Formatter('%(asctime)s [%(levelname)s] %(name)s: %(message)s')
+        handler.setFormatter(formatter)
+        return handler
+
+    def get_handler(self):
         logging_dir = os.path.expanduser("~/.local/mahamoti/log/")
         logging_path = os.path.join(logging_dir, "events.log")
         ensure_is_dir(logging_dir)
+        return logging.handlers.RotatingFileHandler(
+            logging_path, maxBytes=20*1024*1024
+        )
 
-        if debug:
-            logger.addHandler(logging.StreamHandler())
-        else:
-            logger.addHandler(logging.handlers.RotatingFileHandler(
-                logging_path, maxBytes=20*1024*1024
-            ))
-        return logger
+    def get_formatter(self, handler):
+        handler.setFormatter('%(asctime)s [%(levelname)s] %(name)s: %(message)s')
+        return handler
 
+class DebugLogger(Logger):
+
+    def get_handler(self):
+        return logging.StreamHandler()

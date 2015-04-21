@@ -24,4 +24,7 @@ def validate():
 
 def log_event(form):
     event = form.to_dict()
-    config.Logger.instance(app.debug).info(json.dumps(event))
+    get_logger().event(json.dumps(event))
+
+def get_logger():
+    return config.DebugLogger.instance() if app.debug else config.Logger.instance()
